@@ -5,6 +5,7 @@ crud.read = function (tableName, where = null, fields = "*") {
     query += " WHERE " + where;
   }
   console.log(query);
+  return query;
 };
 
 crud.create = (tableName, data) => {
@@ -19,6 +20,7 @@ crud.create = (tableName, data) => {
   }
   query += keys.join(", ") + ") VALUES ('" + values.join("','") + "')";
   console.log(query);
+  return query;
 };
 
 crud.update = (tableName, data, where) => {
@@ -31,11 +33,13 @@ crud.update = (tableName, data, where) => {
   query = query.slice(0, -2);
   query += " WHERE " + where;
   console.log(query);
+  return query;
 };
 
 crud.delete = (tableName, where) => {
   let query = "DELETE FROM " + tableName + " WHERE " + where;
   console.log(query);
+  return query;
 };
 
 module.exports = crud;

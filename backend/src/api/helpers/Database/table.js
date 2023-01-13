@@ -34,6 +34,7 @@ table.createTable = (tableName, columns) => {
   query = query.slice(0, -1);
   query += ")";
   console.log(query);
+  return query;
 };
 
 table.addForeignKey = (tableName, columnName, refTableName, refColumnName) => {
@@ -48,6 +49,7 @@ table.addForeignKey = (tableName, columnName, refTableName, refColumnName) => {
     refColumnName +
     ")";
   console.log(query);
+  return query;
 };
 
 module.exports = table;

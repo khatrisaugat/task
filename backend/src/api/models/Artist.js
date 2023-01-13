@@ -11,4 +11,14 @@ const artistFields = {
 };
 
 const Artist = new Database("artists", artistFields);
+// Artist.create({
+//   name: "Hello World",
+//   dob: "2020-01-01",
+//   gender: "m",
+//   first_release_year: "2020",
+//   no_of_albums_released: 1,
+// });
+// Artist.read();
+// Artist.update({ name: "Hello World" }, "id=1");
+// Artist.delete("id=1");
 module.exports = Artist;
