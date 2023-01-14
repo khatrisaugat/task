@@ -1,6 +1,7 @@
 const crud = {};
 
-crud.read = (tableName, { where, fields, join }) => {
+crud.read = (tableName, obj) => {
+  const { fields, join, where } = obj || {};
   if (fields) {
     var query = "SELECT " + fields + " FROM " + tableName;
   } else {
@@ -38,7 +39,9 @@ crud.create = (tableName, data) => {
   return query;
 };
 
-crud.update = (tableName, data, { where }) => {
+crud.update = (tableName, data, obj) => {
+  const { where } = obj || {};
+  if (!where) return console.log("Please provide where clause");
   let query = "UPDATE " + tableName + " SET ";
   for (const key in data) {
     if (data.hasOwnProperty(key)) {
@@ -58,7 +61,9 @@ crud.update = (tableName, data, { where }) => {
   return query;
 };
 
-crud.delete = (tableName, { where }) => {
+crud.delete = (tableName, obj) => {
+  const { where } = obj || {};
+  if (!where) return console.log("Please provide where clause");
   let query = "DELETE FROM " + tableName;
   if (where) {
     Object.keys(where).forEach((key, i) => {

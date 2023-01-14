@@ -78,7 +78,7 @@ class Database {
     const [rows] = await connection.query(sql);
     // console.log("rowsData: ", rows);
     if (rows.affectedRows == 0) return { error: "No data found to delete" };
-    return where.id;
+    return { message: "Data deleted successfully" };
   };
 }
 
