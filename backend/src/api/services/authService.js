@@ -8,23 +8,6 @@ exports.hash_password = (password, salt) => bcrypt.hash(password, salt);
 
 exports.save_user = async (user) => {
   try {
-    // var data;
-    // await User.create(user, (err, res) => {
-    //   if (err) {
-    //     console.log(err);
-    //     return err;
-    //   }
-    //   console.log(res.insertId);
-    //   User.find({ where: { id: res.insertId } }, (err, res1) => {
-    //     if (err) {
-    //       console.log(err);
-    //       return err;
-    //     }
-    //     console.log("user aayo:", res1);
-    //     res.send(res1);
-    //   });
-    // });
-    // await console.log("data", data);
     const id = await User.create(user);
     const savedUser = await User.find({ where: { id: id } });
     console.log("savedUser", savedUser);
@@ -84,7 +67,7 @@ exports.decode_token = (token) => {
 
 exports.verify_token = async (req, res, next) => {
   const self = require("./authService");
-  const token = req.header("x-auth-token");
+  const token = req.header("Authorization");
   console.log(token);
   if (!token) {
     return res.status(401).json({ error: "Unauthorized" });

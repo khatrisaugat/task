@@ -26,7 +26,17 @@ exports.register_a_user = async (req, res) => {
       // Save user in the database
       const user = await authService.save_user(newUser);
       console.log("controller", user[0]);
-      return res.json(user[0]);
+      const payload = {
+        id: user.id,
+        email: user.email,
+      };
+      console.log(payload.email);
+      // Sign token
+      const token = authService.generate_token(payload);
+      return res.json({
+        success: true,
+        token: "Bearer " + token,
+      });
     }
   } catch (err) {
     console.log(err);

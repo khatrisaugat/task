@@ -1,11 +1,36 @@
 const musicRoutes = (router) => {
   const musicController = require("../controllers/musicController");
-  router.get("/musics", musicController.getAllMusics);
-  router.get("/musics/:id", musicController.getMusicById);
-  router.get("/musics/artist/:id", musicController.getMusicByArtistId);
-  router.post("/musics", musicController.createMusic);
-  router.put("/musics/:id", musicController.updateMusicDetail);
-  router.delete("/musics/:id", musicController.deleteMusic);
+  const passport = require("passport");
+  router.get(
+    "/musics",
+    passport.authenticate("jwt", { session: false }),
+    musicController.getAllMusics
+  );
+  router.get(
+    "/musics/:id",
+    passport.authenticate("jwt", { session: false }),
+    musicController.getMusicById
+  );
+  router.get(
+    "/musics/artist/:id",
+    passport.authenticate("jwt", { session: false }),
+    musicController.getMusicByArtistId
+  );
+  router.post(
+    "/musics",
+    passport.authenticate("jwt", { session: false }),
+    musicController.createMusic
+  );
+  router.put(
+    "/musics/:id",
+    passport.authenticate("jwt", { session: false }),
+    musicController.updateMusicDetail
+  );
+  router.delete(
+    "/musics/:id",
+    passport.authenticate("jwt", { session: false }),
+    musicController.deleteMusic
+  );
 };
 
 module.exports = musicRoutes;
