@@ -1,6 +1,8 @@
 const crud = require("./crud");
 const table = require("./table");
 const db = require("./../../../config/db");
+// db.connectdb();
+// const connection = db.connectdb();
 
 class Database {
   constructor(tableName, columns) {
@@ -10,18 +12,18 @@ class Database {
     this.createTable();
   }
   //create table using fields
-  createTable = () => {
+  createTable = async () => {
     const tableName = this.tableName;
     const columns = this.columns;
     const sql = table.createTable(tableName, columns);
-    db.query(sql, (err, result) => {
-      if (err) throw err;
-      console.log("Table created");
-    });
+    const connection = await db.connectdb();
+    const [rows, fields] = await connection.query(sql);
+    // await connection.query(sql);
+    // console.log(rows);
   };
 
   //add foreign key with relationship
-  addForeignKey = (columnName, refTableName, refColumnName) => {
+  addForeignKey = async (columnName, refTableName, refColumnName) => {
     const tableName = this.tableName;
     const sql = table.addForeignKey(
       tableName,
@@ -29,57 +31,54 @@ class Database {
       refTableName,
       refColumnName
     );
-    db.query(sql, (err, result) => {
-      if (err) throw err;
-      console.log("Relationship created");
-    });
+    const connection = await db.connectdb();
+    const [rows, fields] = await connection.query(sql);
+    console.log("Foreign key added");
   };
 
   //insert data into table
-  create = (data) => {
+  create = async (data) => {
     const tableName = this.tableName;
     const sql = crud.create(tableName, data);
-    db.query(sql, async (err, result, fields) => {
-      if (err) throw err;
-      console.log("Data inserted");
-      console.log(result.insertId);
-      return result.insertId;
-    });
+    const connection = await db.connectdb();
+    const [rows, fields] = await connection.query(sql);
+    // console.log("rows: ", rows);
+    return rows.insertId;
   };
 
   //get data from table
-  read = (where = null, fields = "*") => {
+  find = async (condition) => {
     const tableName = this.tableName;
-    const sql = crud.read(tableName, where, fields);
-    db.query(sql, (err, result, fields) => {
-      if (err) throw err;
-      console.log("getting data");
-      console.log(result);
-      return result;
-    });
+    const sql = crud.read(tableName, condition);
+
+    const connection = await db.connectdb();
+    const [rows] = await connection.query(sql);
+    // console.log("rowsData: ", rows);
+    return rows;
   };
 
   //update data in table
-  update = (data, where) => {
+  update = async (data, where) => {
     const tableName = this.tableName;
     const sql = crud.update(tableName, data, where);
-    db.query(sql, (err, result) => {
-      if (err) throw err;
-      console.log("Relationship created");
-      console.log(result);
-      return result;
-    });
+    const connection = await db.connectdb();
+    const [rows] = await connection.query(sql);
+    // console.log("rowsData: ", rows);
+    if (rows.affectedRows == 0) return { error: "No data found to update" };
+    const result = await this.find(where);
+    console.log("result: ", result);
+    return result;
   };
 
   //delete data from table
-  delete = (where) => {
+  delete = async (where) => {
     const tableName = this.tableName;
     const sql = crud.delete(tableName, where);
-    db.query(sql, (err, result) => {
-      if (err) throw err;
-      console.log("Relationship created");
-      console.log(result);
-    });
+    const connection = await db.connectdb();
+    const [rows] = await connection.query(sql);
+    // console.log("rowsData: ", rows);
+    if (rows.affectedRows == 0) return { error: "No data found to delete" };
+    return where.id;
   };
 }
 

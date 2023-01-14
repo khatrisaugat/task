@@ -1,8 +1,23 @@
 const crud = {};
-crud.read = function (tableName, where = null, fields = "*") {
-  let query = "SELECT " + fields + " FROM " + tableName;
+
+crud.read = (tableName, { where, fields, join }) => {
+  if (fields) {
+    var query = "SELECT " + fields + " FROM " + tableName;
+  } else {
+    var query = "SELECT * FROM " + tableName;
+  }
+  if (join) {
+    Object.keys(join).forEach((key) => {
+      query += " JOIN " + key + " ON " + join[key];
+    });
+  }
   if (where) {
-    query += " WHERE " + where;
+    Object.keys(where).forEach((key, i) => {
+      if (i > 0) {
+        query += " AND ";
+      }
+      query += " WHERE " + key + " = '" + where[key] + "'";
+    });
   }
   console.log(query);
   return query;
@@ -23,7 +38,7 @@ crud.create = (tableName, data) => {
   return query;
 };
 
-crud.update = (tableName, data, where) => {
+crud.update = (tableName, data, { where }) => {
   let query = "UPDATE " + tableName + " SET ";
   for (const key in data) {
     if (data.hasOwnProperty(key)) {
@@ -31,13 +46,28 @@ crud.update = (tableName, data, where) => {
     }
   }
   query = query.slice(0, -2);
-  query += " WHERE " + where;
+  if (where) {
+    Object.keys(where).forEach((key, i) => {
+      if (i > 0) {
+        query += " AND ";
+      }
+      query += " WHERE " + key + " = '" + where[key] + "'";
+    });
+  }
   console.log(query);
   return query;
 };
 
-crud.delete = (tableName, where) => {
-  let query = "DELETE FROM " + tableName + " WHERE " + where;
+crud.delete = (tableName, { where }) => {
+  let query = "DELETE FROM " + tableName;
+  if (where) {
+    Object.keys(where).forEach((key, i) => {
+      if (i > 0) {
+        query += " AND ";
+      }
+      query += " WHERE " + key + " = '" + where[key] + "'";
+    });
+  }
   console.log(query);
   return query;
 };
