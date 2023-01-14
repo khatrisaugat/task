@@ -7,4 +7,10 @@ authRoutes(router);
 const userRoutes = require("./userRoutes");
 userRoutes(router);
 
+const artistRoutes = require("./artistRoutes");
+artistRoutes(router);
+
+const musicRoutes = require("./musicRoutes");
+musicRoutes(router);
+
 module.exports = router;
