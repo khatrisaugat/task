@@ -13,6 +13,15 @@ musicFields = {
   updated_at: { type: "datetime", nullable: true },
 };
 
+//create a dummy data
+// const Music = new Database("musics", musicFields);
+// Music.create({
+//   title: "Hello World",
+//   artist_id: 1,
+//   album_name: "Hello World",
+//   genre: "rnb",
+// });
+
 const Music = new Database("musics", musicFields);
 Music.addForeignKey("artist_id", "artists", "id");
 module.exports = Music;

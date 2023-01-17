@@ -1,8 +1,8 @@
 const Database = require("../helpers/Database");
 const UserFields = {
   id: { type: "int", nullable: false, primary: true, autoIncrement: true },
-  firstName: { type: "varchar", maxlength: 255, nullable: false },
-  lastName: { type: "varchar", maxlength: 255, nullable: false },
+  first_name: { type: "varchar", maxlength: 255, nullable: false },
+  last_name: { type: "varchar", maxlength: 255, nullable: false },
   email: { type: "varchar", maxlength: 255, nullable: false, unique: true },
   password: { type: "varchar", maxlength: 500, nullable: false },
   phone: { type: "varchar", maxlength: 20, nullable: false },

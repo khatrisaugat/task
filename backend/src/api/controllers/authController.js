@@ -14,14 +14,14 @@ exports.register_a_user = async (req, res) => {
       );
       // Create a new user
       const newUser = {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
         email: req.body.email,
         password: newPassword,
         dob: req.body.dob,
         phone: req.body.phone,
         gender: req.body.gender,
-        address: req.body.firstName,
+        address: req.body.address,
       };
       // Save user in the database
       const user = await authService.save_user(newUser);

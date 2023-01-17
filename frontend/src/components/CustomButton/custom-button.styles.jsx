@@ -14,7 +14,7 @@ const button = css`
 `;
 
 const buttonStyles = css`
-  border: none;
+  border: 1px solid #fff;
   background: #000;
   color: #fff;
   &:hover {
@@ -62,6 +62,27 @@ const invertedButtonStyles = css`
       box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
     }
 `;
+const iconButton = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #000;
+  text-transform: none;
+  font-size: 1rem;
+  padding: 2px;
+  box-sizing: border-box;
+  &:hover {
+    background-color: #000;
+    border: 1px solid #fff;
+    color: #fff;
+    animation: pulse 1s infinite;
+  }
+`;
 
 const navTabButtonStyles = css`
   display: flex;
@@ -97,6 +118,9 @@ const buttonType = (props) => {
   }
   if (props.navTabButtonStylesWhite) {
     return navTabButtonStylesWhite;
+  }
+  if (props.iconButton) {
+    return iconButton;
   }
   return props.inverted ? invertedButtonStyles : buttonStyles;
 };

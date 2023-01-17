@@ -3,13 +3,14 @@ import styled from "styled-components";
 export const Content = styled.div`
     display:flex;
     flex-direction:column;
-    justify-content:center;
     align-items:center;
-    width: 100%;
+    justify-content:center;
     overflow: hidden;
+    overflow-y: scroll;
+    height: 80%;
+    margin: auto;
+    position: relative;
     z-index: 1000;
-    height:100%;
-    margin:auto;
     animation: fadeIn 1s ease-in-out;
     }
     @keyframes fadeIn {
