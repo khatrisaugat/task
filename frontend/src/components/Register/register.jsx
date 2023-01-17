@@ -27,7 +27,7 @@ function Register() {
   };
   return (
     <Content className="no-scroll">
-      <h2>Register User</h2>
+      <h1>Register User</h1>
       <FormInput
         label="First Name"
         name="firstName"

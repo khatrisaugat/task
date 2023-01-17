@@ -51,7 +51,8 @@ exports.generate_token = (user) => {
     email: user.email,
   };
   return jwt.sign(payload, process.env.JWT_SECRET, {
-    expiresIn: 31556926, // 1 year in seconds
+    // expiresIn: 31556926, // 1 year in seconds
+    expiresIn: 86400, // 1 day in seconds
   });
 };
 
@@ -70,20 +71,22 @@ exports.verify_token = async (req, res, next) => {
   const token = req.header("Authorization");
   console.log(token);
   if (!token) {
-    return res.status(401).json({ error: "Unauthorized" });
+    return { error: "Unauthorized" };
   }
   try {
     const decoded = self.decode_token(token);
     console.log(decoded);
-
+    if (decoded === undefined || !decoded.email) {
+      return { error: "Incorrect or expired token" };
+    }
     // console.log(decoded.payload);
     const user = await self.find_user(decoded.email);
     if (!user) {
-      return res.status(401).json({ error: "Unauthorized" });
+      return { error: "Something went worng" };
     }
     return user;
   } catch (err) {
     console.log(err);
-    return res.status(401).json({ error: "Unauthorized" });
+    return { error: "Token expired" };
   }
 };

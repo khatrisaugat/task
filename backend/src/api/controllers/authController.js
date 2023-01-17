@@ -81,6 +81,14 @@ exports.login_a_user = async (req, res) => {
 };
 
 exports.current_user = async (req, res, next) => {
-  const user = await authService.verify_token(req, res, next);
-  return res.json(user);
+  try {
+    const user = await authService.verify_token(req, res, next);
+    if (user.error) {
+      return res.status(401).json(user);
+    }
+    return res.json(user);
+  } catch (err) {
+    console.log(err);
+    return res.json({ error: "Something went wrong" });
+  }
 };
