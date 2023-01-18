@@ -83,6 +83,26 @@ const iconButton = css`
     animation: pulse 1s infinite;
   }
 `;
+const closeButton = css`
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #000;
+  color: #fff;
+  border: 1px solid #000;
+  text-transform: none;
+  font-size: 1.5rem;
+  padding: 2px;
+  box-sizing: border-box;
+  &:hover {
+    background-color: #fff;
+    color: red;
+    animation: pulse 1s infinite;
+  }
+`;
 
 const navTabButtonStyles = css`
   display: flex;
@@ -121,6 +141,9 @@ const buttonType = (props) => {
   }
   if (props.iconButton) {
     return iconButton;
+  }
+  if (props.closeButton) {
+    return closeButton;
   }
   return props.inverted ? invertedButtonStyles : buttonStyles;
 };

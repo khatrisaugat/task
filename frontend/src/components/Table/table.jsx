@@ -2,7 +2,7 @@ import React from "react";
 import { TableContainer } from "./table.styles";
 import TableRow from "../TableRow/table-row";
 
-function Table({ dataSet }) {
+function Table({ dataSet, handleEdit }) {
   const getHeaderColumn = (data) => {
     let headerColumn = Object.keys(data).filter(
       (key) =>
@@ -12,31 +12,30 @@ function Table({ dataSet }) {
         key !== "updated_at"
     );
     headerColumn = headerColumn.map((el) => el.replace("_", " "));
-    headerColumn.push("action");
     return headerColumn;
   };
   const getBodyColumn = (dataSet) => {
-    let bodyColumn = dataSet.map((data) => {
-      return Object.values(data).filter(
-        (value) =>
-          value !== data.id &&
-          value !== data.password &&
-          value !== data.created_at &&
-          value !== data.updated_at
-      );
+    dataSet.forEach((data) => {
+      delete data.id;
+      delete data.password;
+      delete data.created_at;
+      delete data.updated_at;
+      data.action = "actionBody";
     });
-    bodyColumn = bodyColumn.map((row) => {
-      row.push("actionBody");
-      return row;
-    });
-    return bodyColumn;
+
+    return dataSet;
   };
   if (dataSet.length === 0) return <div>There is no data</div>;
   return (
     <TableContainer className="no-scroll">
       <TableRow isHeader={true} data={getHeaderColumn(dataSet[0])} />
       {getBodyColumn(dataSet).map((row, index) => (
-        <TableRow key={index} data={row} isHeader={false} />
+        <TableRow
+          key={index}
+          data={row}
+          isHeader={false}
+          handleEdit={handleEdit}
+        />
       ))}
     </TableContainer>
   );
