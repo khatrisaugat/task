@@ -32,7 +32,7 @@ function Register() {
   const handleSubmit = async (event) => {
     const data = await registerUser(state);
     if (data.success) {
-      navigate("/admin");
+      navigate("/home");
     } else if (data.error) {
       setError(data.error);
       setTimeout(() => {

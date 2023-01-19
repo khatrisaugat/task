@@ -62,8 +62,10 @@ export const FormInputLabel = styled.label`
       ? otherLabel
       : null}
   transition: 300ms ease all;
-  ${({ otherProps }) =>
-    otherProps.type !== "date" || otherProps.type !== "radio"
-      ? otherProps.value.length && shrinkLabel
-      : null}
+  ${({ otherProps }) => {
+    if (otherProps.value !== undefined)
+      return otherProps.type !== "date" || otherProps.type !== "radio"
+        ? otherProps.value.length && shrinkLabel
+        : null;
+  }}
 `;

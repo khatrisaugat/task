@@ -9,10 +9,11 @@ import axios from "axios";
 
 Modal.setAppElement("#root");
 
-function EditUser({ openModal, closeModal, data }) {
+function EditUser({ openModal, closeModal, data, isUpdated }) {
   const [error, setError] = useState("");
   console.log(data);
   useEffect(() => {
+    data.action && delete data.action;
     setState(data);
   }, [data]);
   const [state, setState] = useState({
@@ -32,21 +33,25 @@ function EditUser({ openModal, closeModal, data }) {
   function afterOpenModal() {
     // references are now sync'd and can be accessed.
   }
-  const updateUser = async (user) => {
-    console.log(user);
+  const updateUser = async (user, id) => {
+    console.log("id", id);
     const getToken = localStorage.getItem("token");
     user = JSON.stringify(user);
     try {
-      const res = await axios.put("http://localhost:5000/api/users/", user, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: getToken,
-        },
-      });
+      const res = await axios.put(
+        "http://localhost:5000/api/users/" + id,
+        user,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: getToken,
+          },
+        }
+      );
       console.log(res.data);
-      if (res.data.success) {
-        localStorage.setItem("token", res.data.token);
-      }
+      // if (res.data.success) {
+      //   localStorage.setItem("token", res.data.token);
+      // }
       return res.data;
     } catch (err) {
       console.log(err.response.data);
@@ -55,11 +60,13 @@ function EditUser({ openModal, closeModal, data }) {
   };
 
   const handleSubmit = async (event) => {
-    const data = await updateUser(state);
-    if (data.success) {
+    const user = await updateUser(state, data.id);
+    if (user[0]) {
+      console.log(user[0]);
+      isUpdated(true);
       closeModal();
-    } else if (data.error) {
-      setError(data.error);
+    } else if (user.error) {
+      setError(user.error);
       setTimeout(() => {
         setError("");
       }, 3000);

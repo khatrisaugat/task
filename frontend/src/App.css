@@ -73,7 +73,8 @@ body {
   justify-content: flex-start;
   height: 100%;
   width: 100%;
-  padding: 5em;
+  padding: 2em;
+  padding-right: 5em;
   box-sizing: border-box;
 }
 

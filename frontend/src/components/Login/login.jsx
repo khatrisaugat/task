@@ -40,7 +40,7 @@ function Login() {
   const handleSubmit = async (event) => {
     const data = await loginUser(state);
     if (data.success) {
-      navigate("/admin");
+      navigate("/home");
     } else if (data.error) {
       setError(data.error);
       setTimeout(() => {

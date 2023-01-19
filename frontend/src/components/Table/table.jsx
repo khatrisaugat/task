@@ -2,7 +2,7 @@ import React from "react";
 import { TableContainer } from "./table.styles";
 import TableRow from "../TableRow/table-row";
 
-function Table({ dataSet, handleEdit }) {
+function Table({ dataSet, handleEdit, handleDelete }) {
   console.log(dataSet);
   const getHeaderColumn = (data) => {
     let headerColumn = Object.keys(data).filter(
@@ -35,6 +35,7 @@ function Table({ dataSet, handleEdit }) {
           data={row}
           isHeader={false}
           handleEdit={handleEdit}
+          handleDelete={handleDelete}
         />
       ))}
     </TableContainer>

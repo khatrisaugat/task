@@ -3,12 +3,11 @@ import { TableCellDiv, TableRowDiv } from "./table-row.styles";
 import CustomButton from "../CustomButton/custom-button";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 
-function TableRow({ isHeader, data, handleEdit }) {
-  const newData = data;
-  if (data.id) {
+function TableRow({ isHeader, data, handleEdit, handleDelete }) {
+  const newData = { ...data };
+  if (newData.id) {
     delete newData.id;
   }
-
   const convertDateToYYYMMDD = (date) => {
     let d = new Date(date);
     let month = "" + (d.getMonth() + 1);
@@ -24,13 +23,13 @@ function TableRow({ isHeader, data, handleEdit }) {
     data.dob = convertDateToYYYMMDD(data.dob);
   }
 
-  const makeActionsItem = () => {
+  const makeActionsItem = (data) => {
     return (
       <div>
         <CustomButton iconButton onClick={() => handleEdit(data)}>
           <AiFillEdit />
         </CustomButton>
-        <CustomButton iconButton>
+        <CustomButton iconButton onClick={() => handleDelete(data)}>
           <AiFillDelete />
         </CustomButton>
       </div>
@@ -48,7 +47,7 @@ function TableRow({ isHeader, data, handleEdit }) {
         Object.values(newData).map((item, index) => {
           return (
             <TableCellDiv key={index}>
-              {item !== "actionBody" ? item : makeActionsItem()}
+              {item !== "actionBody" ? item : makeActionsItem(data)}
             </TableCellDiv>
           );
         })}

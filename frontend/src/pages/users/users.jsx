@@ -16,6 +16,30 @@ function Users() {
     setEditUser(data);
     setIsOpen(true);
   }
+
+  const handleDelete = async (data) => {
+    console.log(data);
+    const getToken = localStorage.getItem("token");
+    try {
+      const res = await axios.delete(
+        `http://localhost:5000/api/users/${data.id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: getToken,
+          },
+        }
+      );
+      console.log(res.data);
+      getUsers();
+    } catch (err) {
+      console.log(err.response.status);
+      if (err.response.status === 401) {
+        localStorage.removeItem("token");
+        navigate("/");
+      }
+    }
+  };
   function closeModal() {
     setIsOpen(false);
   }
@@ -29,9 +53,9 @@ function Users() {
           Authorization: getToken,
         },
       });
-      console.log("res");
+      // console.log("res");
 
-      console.log(res.data);
+      // console.log(res.data);
       setUsers(res.data);
     } catch (err) {
       console.log(err.response.status);
@@ -41,6 +65,7 @@ function Users() {
       }
     }
   }, [navigate]);
+
   useEffect(() => {
     getUsers();
   }, [getUsers]);
@@ -51,12 +76,19 @@ function Users() {
       <div className="BodySection">
         <Header />
         <div className="container">
-          <Table dataSet={users} handleEdit={openModal} />
-          <EditUser
-            openModal={modalIsOpen}
-            closeModal={closeModal}
-            data={editUser}
+          <Table
+            dataSet={users}
+            handleEdit={openModal}
+            handleDelete={handleDelete}
           />
+          {modalIsOpen && (
+            <EditUser
+              openModal={modalIsOpen}
+              closeModal={closeModal}
+              data={editUser}
+              isUpdated={getUsers}
+            />
+          )}
         </div>
       </div>
     </div>
