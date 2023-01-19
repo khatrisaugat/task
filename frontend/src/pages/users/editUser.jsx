@@ -1,24 +1,16 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
-import FormInput from "../FormInput/form-input";
-import CustomButton from "../CustomButton/custom-button";
+import FormInput from "../../components/FormInput/form-input";
+import CustomButton from "../../components/CustomButton/custom-button";
 import { Wrapper, Content } from "./users.styles";
 import { AiOutlineClose } from "react-icons/ai";
 import { FaArrowDown } from "react-icons/fa";
+import axios from "axios";
 
-// const customStyles = {
-//   content: {
-//     top: "50%",
-//     left: "50%",
-//     right: "auto",
-//     bottom: "auto",
-//     marginRight: "-50%",
-//     transform: "translate(-50%, -50%)",
-//   },
-// };
 Modal.setAppElement("#root");
 
 function EditUser({ openModal, closeModal, data }) {
+  const [error, setError] = useState("");
   console.log(data);
   useEffect(() => {
     setState(data);
@@ -40,6 +32,40 @@ function EditUser({ openModal, closeModal, data }) {
   function afterOpenModal() {
     // references are now sync'd and can be accessed.
   }
+  const updateUser = async (user) => {
+    console.log(user);
+    const getToken = localStorage.getItem("token");
+    user = JSON.stringify(user);
+    try {
+      const res = await axios.put("http://localhost:5000/api/users/", user, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: getToken,
+        },
+      });
+      console.log(res.data);
+      if (res.data.success) {
+        localStorage.setItem("token", res.data.token);
+      }
+      return res.data;
+    } catch (err) {
+      console.log(err.response.data);
+      return err.response.data;
+    }
+  };
+
+  const handleSubmit = async (event) => {
+    const data = await updateUser(state);
+    if (data.success) {
+      closeModal();
+    } else if (data.error) {
+      setError(data.error);
+      setTimeout(() => {
+        setError("");
+      }, 3000);
+    }
+  };
+
   return (
     <Wrapper>
       <Modal
@@ -52,6 +78,7 @@ function EditUser({ openModal, closeModal, data }) {
         <CustomButton closeButton onClick={closeModal}>
           <AiOutlineClose />
         </CustomButton>
+        <p className="error">{error}</p>
         <Content className="no-scroll">
           <h1>Edit User Details</h1>
           <FormInput
@@ -131,7 +158,7 @@ function EditUser({ openModal, closeModal, data }) {
             handleChange={handleChange}
             required
           />
-          <CustomButton>Update</CustomButton>
+          <CustomButton onClick={handleSubmit}>Update</CustomButton>
         </Content>
         <FaArrowDown className="blinkAnimation" />
       </Modal>

@@ -1,12 +1,18 @@
 import React from "react";
 import { HeaderContainer } from "./header.styles";
 import CustomButton from "./../CustomButton/custom-button";
+import { useNavigate } from "react-router-dom";
 
 function Header() {
+  const navigate = useNavigate();
+  const handleLogOut = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
   return (
     <HeaderContainer>
       <h1>Cloco</h1>
-      <CustomButton>Log Out</CustomButton>
+      <CustomButton onClick={handleLogOut}>Log Out</CustomButton>
     </HeaderContainer>
   );
 }

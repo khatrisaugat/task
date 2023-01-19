@@ -3,6 +3,7 @@ import { TableContainer } from "./table.styles";
 import TableRow from "../TableRow/table-row";
 
 function Table({ dataSet, handleEdit }) {
+  console.log(dataSet);
   const getHeaderColumn = (data) => {
     let headerColumn = Object.keys(data).filter(
       (key) =>
@@ -11,12 +12,11 @@ function Table({ dataSet, handleEdit }) {
         key !== "created_at" &&
         key !== "updated_at"
     );
-    headerColumn = headerColumn.map((el) => el.replace("_", " "));
+    headerColumn = headerColumn.map((el) => el.replaceAll("_", " "));
     return headerColumn;
   };
   const getBodyColumn = (dataSet) => {
     dataSet.forEach((data) => {
-      delete data.id;
       delete data.password;
       delete data.created_at;
       delete data.updated_at;

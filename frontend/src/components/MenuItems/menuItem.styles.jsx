@@ -12,8 +12,8 @@ export const MenuItemContent = styled.div`
   cursor: pointer;
   box-sizing: border-box;
   &:hover {
-    background-color: #fff;
-    color: #000;
+    background-color: #000;
+    color: #fff;
     border-radius: 30px;
   }
 `;

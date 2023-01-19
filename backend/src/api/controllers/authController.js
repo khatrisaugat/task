@@ -52,7 +52,7 @@ exports.login_a_user = async (req, res) => {
   try {
     // Check if user exists
     if (!(await authService.check_if_user_exists(req.body.email))) {
-      return res.status(400).json({ email: "User doesn't exist" });
+      return res.json({ error: "User doesn't exist" });
     }
     const user = await authService.find_user(email);
     // Check password
@@ -72,7 +72,7 @@ exports.login_a_user = async (req, res) => {
         token: "Bearer " + token,
       });
     } else {
-      return res.status(400).json({ error: "Credentials incorrect" });
+      return res.json({ error: "Credentials incorrect" });
     }
   } catch (err) {
     console.log(err);
@@ -84,7 +84,7 @@ exports.current_user = async (req, res, next) => {
   try {
     const user = await authService.verify_token(req, res, next);
     if (user.error) {
-      return res.status(401).json(user);
+      return res.json(user);
     }
     return res.json(user);
   } catch (err) {

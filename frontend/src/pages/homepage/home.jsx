@@ -1,17 +1,17 @@
 import React from "react";
 import Header from "../../components/Header/header";
 import Sidebar from "../../components/Sidebar/sidebar";
-import Users from "../../components/Users/users";
-import { BodySection, HomeContainer } from "./home.styles";
 function Home() {
   return (
-    <HomeContainer>
+    <div className="HomeContainer">
       <Sidebar />
-      <BodySection>
+      <div className="BodySection">
         <Header />
-        <Users />
-      </BodySection>
-    </HomeContainer>
+        <div className="container">
+          <h1>Welcome to Dashboard</h1>
+        </div>
+      </div>
+    </div>
   );
 }
 

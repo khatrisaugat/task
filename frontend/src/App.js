@@ -1,23 +1,24 @@
 import "./App.css";
 import LoginAndRegister from "./pages/login-and-register/login-and-register";
 import Home from "./pages/homepage/home";
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  Navigate,
-} from "react-router-dom";
+import Users from "./pages/users/users";
+import { Route, Routes } from "react-router-dom";
+import PrivateRoutes from "./utils/PrivateRoutes";
+import Artists from "./pages/artists/artists";
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <Routes>
-          <Route path="/" element={<LoginAndRegister />} />
-          <Route path="/admin" element={<Home />} />
-        </Routes>
-      </div>
-    </Router>
+    <div className="App">
+      <Routes>
+        <Route path="/" element={<LoginAndRegister />} />
+        <Route element={<PrivateRoutes />}>
+          <Route path="/home" element={<Home />} />
+          <Route path="/users" element={<Users />} />
+          <Route path="/artists" element={<Artists />} />
+          <Route path="*" element={<h1>404 Not Found</h1>} />
+        </Route>
+      </Routes>
+    </div>
   );
 }
 

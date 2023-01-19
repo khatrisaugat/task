@@ -2,8 +2,12 @@ import React, { useState } from "react";
 import { Content } from "./register.styles";
 import FormInput from "./../FormInput/form-input";
 import CustomButton from "../CustomButton/custom-button";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Register() {
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
   const get18YearsAgo = () => {
     const date = new Date();
     date.setFullYear(date.getFullYear() - 18);
@@ -11,8 +15,8 @@ function Register() {
   };
   console.log(get18YearsAgo());
   const [state, setState] = useState({
-    firstName: "",
-    lastName: "",
+    first_name: "",
+    last_name: "",
     phone: "",
     email: "",
     password: "",
@@ -25,22 +29,58 @@ function Register() {
     setState({ ...state, [name]: value });
     console.log(state);
   };
+  const handleSubmit = async (event) => {
+    const data = await registerUser(state);
+    if (data.success) {
+      navigate("/admin");
+    } else if (data.error) {
+      setError(data.error);
+      setTimeout(() => {
+        setError("");
+      }, 3000);
+    }
+  };
+
+  const registerUser = async (user) => {
+    console.log(user);
+    user = JSON.stringify(user);
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/users/register",
+        user,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(res.data);
+      if (res.data.success) {
+        localStorage.setItem("token", res.data.token);
+      }
+      return res.data;
+    } catch (err) {
+      console.log(err.response.data);
+      return err.response.data;
+    }
+  };
   return (
     <Content className="no-scroll">
       <h1>Register User</h1>
+      <p className="error">{error}</p>
       <FormInput
         label="First Name"
-        name="firstName"
+        name="first_name"
         type="text"
-        value={state.firstName}
+        value={state.first_name}
         handleChange={handleChange}
         required
       />
       <FormInput
         label="Last Name"
-        name="lastName"
-        type="password"
-        value={state.lastName}
+        name="last_name"
+        type="text"
+        value={state.last_name}
         handleChange={handleChange}
         required
       />
@@ -113,7 +153,7 @@ function Register() {
         handleChange={handleChange}
         required
       />
-      <CustomButton>Register</CustomButton>
+      <CustomButton onClick={handleSubmit}>Register</CustomButton>
     </Content>
   );
 }
