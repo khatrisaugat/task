@@ -38,16 +38,26 @@ table.createTable = (tableName, columns) => {
 };
 
 table.addForeignKey = (tableName, columnName, refTableName, refColumnName) => {
+  //   ALTER TABLE musics
+  // ADD CONSTRAINT `musics_ibfk_1`
+  // FOREIGN KEY IF NOT EXISTS (artist_id) REFERENCES artists(id) ON DELETE CASCADE ON UPDATE CASCADE
   let query =
     "ALTER TABLE " +
     tableName +
-    " ADD FOREIGN KEY (" +
+    " ADD CONSTRAINT " +
+    tableName +
+    "_" +
+    columnName +
+    "_fk" +
+    " FOREIGN KEY " +
+    "IF NOT EXISTS (" +
     columnName +
     ") REFERENCES " +
     refTableName +
     "(" +
     refColumnName +
-    ")";
+    ")" +
+    " ON DELETE CASCADE ON UPDATE CASCADE";
   console.log(query);
   return query;
 };

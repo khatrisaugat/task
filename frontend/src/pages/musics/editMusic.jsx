@@ -128,7 +128,7 @@ function EditMusic({
         </CustomButton>
         <p className="error">{error}</p>
         <Content className="no-scroll">
-          <h1>Edit Music Details</h1>
+          <h1>{isAddModel ? `Add Music` : `Edit Music Details`}</h1>
           <FormInput
             label="Music Title"
             name="title"
@@ -151,6 +151,7 @@ function EditMusic({
             type="text"
             value={state.genre}
             handleChange={handleChange}
+            selectOptions={["jazz", "rnb", "country", "classic", "rock"]}
             required
           />
           {isAddModel ? (

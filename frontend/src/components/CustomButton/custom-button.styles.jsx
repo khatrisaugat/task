@@ -38,6 +38,21 @@ const buttonStyles = css`
     }
 `;
 
+const viewContentButton = css`
+  border: 1px solid #000;
+  width: 100px;
+  background: #000;
+  color: #fff;
+  font-size: 1rem;
+  text-transform: none;
+  &:hover {
+    background-color: #fff;
+    border: 1px solid #fff;
+    color: #000;
+    animation: pulse 1s infinite;
+  }
+`;
+
 const invertedButtonStyles = css`
   background-color: #fff;
   color: #000;
@@ -144,6 +159,9 @@ const buttonType = (props) => {
   }
   if (props.closeButton) {
     return closeButton;
+  }
+  if (props.view) {
+    return viewContentButton;
   }
   return props.inverted ? invertedButtonStyles : buttonStyles;
 };

@@ -14,6 +14,7 @@ function EditArtist({ openModal, closeModal, data, isUpdated, isAddModel }) {
   useEffect(() => {
     if (!isAddModel) {
       data.action && delete data.action;
+      data.custom && delete data.custom;
       setState(data);
     }
   }, [isAddModel, data]);

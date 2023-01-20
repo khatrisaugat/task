@@ -39,6 +39,9 @@ const inputStyles = css`
     outline: none;
   }
 `;
+export const SelectInputContainer = styled.select`
+  ${inputStyles}
+`;
 
 export const FormInputContainer = styled.input`
   ${(props) => (props.type === "radio" ? radio : inputStyles)}

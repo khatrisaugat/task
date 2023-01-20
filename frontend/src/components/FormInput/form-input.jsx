@@ -3,9 +3,10 @@ import {
   FormGroup,
   FormInputContainer,
   FormInputLabel,
+  SelectInputContainer,
 } from "./form-input.styles";
 
-function FormInput({ handleChange, label, ...otherProps }) {
+function FormInput({ handleChange, label, selectOptions, ...otherProps }) {
   return (
     <FormGroup>
       {otherProps.higherLable && (
@@ -13,9 +14,24 @@ function FormInput({ handleChange, label, ...otherProps }) {
           {otherProps.higherLable} <br />
         </FormInputLabel>
       )}
-      <FormInputContainer onChange={handleChange} {...otherProps} />
+      {selectOptions ? (
+        <SelectInputContainer {...otherProps} onChange={handleChange}>
+          {selectOptions.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </SelectInputContainer>
+      ) : (
+        <FormInputContainer onChange={handleChange} {...otherProps} />
+      )}
       {label && otherProps.type !== "date" ? (
-        <FormInputLabel otherProps={otherProps}>{label}</FormInputLabel>
+        <FormInputLabel
+          otherProps={otherProps}
+          style={selectOptions && { top: "-5px", color: "black" }}
+        >
+          {label}
+        </FormInputLabel>
       ) : null}
     </FormGroup>
   );

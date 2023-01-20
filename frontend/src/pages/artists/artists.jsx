@@ -6,7 +6,7 @@ import axios from "axios";
 import Table from "../../components/Table/table";
 import EditArtist from "./editArtist";
 import CustomButton from "../../components/CustomButton/custom-button";
-import { AiOutlineUserAdd } from "react-icons/ai";
+import { AiOutlineUserAdd, AiOutlineSound } from "react-icons/ai";
 
 function Artists() {
   const navigate = useNavigate();
@@ -89,8 +89,9 @@ function Artists() {
 
   const CustomButtonRender = (id) => {
     return (
-      <CustomButton onClick={() => navigate("/musics/" + id)}>
-        View Musics
+      <CustomButton onClick={() => navigate("/musics/" + id)} view>
+        <AiOutlineSound />
+        Musics
       </CustomButton>
     );
   };
@@ -108,14 +109,6 @@ function Artists() {
             dataSet={artists}
             handleDelete={handleDelete}
             handleEdit={openModal}
-            customField={{
-              comp: (
-                <CustomButton onClick={(id) => console.log(id)}>
-                  View Musics
-                </CustomButton>
-              ),
-              data: null,
-            }}
             customRowComponent={CustomButtonRender}
           />
           {modalIsOpen && (

@@ -10,7 +10,6 @@ export const TableRowDiv = styled.div`
   display: flex;
   flex-direction: row;
   padding: 5px 5px;
-
   ${({ isHeader }) => (isHeader ? headerRow : null)}
 `;
 
