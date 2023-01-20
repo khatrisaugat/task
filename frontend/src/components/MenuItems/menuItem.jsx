@@ -1,18 +1,16 @@
 import React from "react";
 import { MenuItemContent, MenuTitle } from "./menuItem.styles";
-import { NavLink } from "react-router-dom";
-import { withRouter } from "../../utils/with-router";
+import { NavLink, useLocation } from "react-router-dom";
+// import { withRouter } from "../../utils/with-router";
 const navStyles = {
   textDecoration: "none",
   color: "#fff",
 };
-const activeStyle = {
-  textDecoration: "none",
-};
 
-function MenuItem({ title, icon, router }) {
-  console.log(router.location.pathname.toString() === "/" + title);
-  const isActive = router.location.pathname.toString() === "/" + title;
+function MenuItem({ title, icon }) {
+  const location = useLocation();
+  // console.log(location.pathname.toString() === "/" + title);
+  const isActive = location.pathname.toString() === "/" + title;
   return (
     <NavLink to={`/${title}`} style={navStyles}>
       <MenuItemContent className={isActive ? `activeLink` : null}>
@@ -25,4 +23,4 @@ function MenuItem({ title, icon, router }) {
   );
 }
 
-export default withRouter(MenuItem);
+export default MenuItem;

@@ -18,6 +18,7 @@ class Database {
     const sql = table.createTable(tableName, columns);
     const connection = await db.connectdb();
     const [rows, fields] = await connection.query(sql);
+    connection.end();
     // await connection.query(sql);
     // console.log(rows);
   };
@@ -33,6 +34,7 @@ class Database {
     );
     const connection = await db.connectdb();
     const [rows, fields] = await connection.query(sql);
+    connection.end();
     console.log("Foreign key added");
   };
 
@@ -42,6 +44,7 @@ class Database {
     const sql = crud.create(tableName, data);
     const connection = await db.connectdb();
     const [rows, fields] = await connection.query(sql);
+    connection.end();
     // console.log("rows: ", rows);
     return rows.insertId;
   };
@@ -53,6 +56,7 @@ class Database {
 
     const connection = await db.connectdb();
     const [rows] = await connection.query(sql);
+    connection.end();
     // console.log("rowsData: ", rows);
     return rows;
   };
@@ -66,6 +70,7 @@ class Database {
     // console.log("rowsData: ", rows);
     if (rows.affectedRows == 0) return { error: "No data found to update" };
     const result = await this.find(where);
+    connection.end();
     console.log("result: ", result);
     return result;
   };
@@ -76,6 +81,7 @@ class Database {
     const sql = crud.delete(tableName, where);
     const connection = await db.connectdb();
     const [rows] = await connection.query(sql);
+    connection.end();
     // console.log("rowsData: ", rows);
     if (rows.affectedRows == 0) return { error: "No data found to delete" };
     return { message: "Data deleted successfully" };

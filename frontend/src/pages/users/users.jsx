@@ -1,74 +1,45 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import Table from "../../components/Table/table";
-import axios from "axios";
 import EditUser from "./editUser";
-import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Sidebar/sidebar";
 import Header from "../../components/Header/header";
-function Users() {
-  const navigate = useNavigate();
-  const [users, setUsers] = useState([]);
-  const [editUser, setEditUser] = useState({});
+import { fetchAllUsers, deleteUser } from "../../api/usersApi";
 
+function Users() {
+  //state for users
+  const [users, setUsers] = useState([]);
+  const [updateTable, setUpdateTable] = useState(false);
+  const [editUser, setEditUser] = useState({});
   const [modalIsOpen, setIsOpen] = useState(false);
+
   function openModal(data) {
-    console.log(data);
     setEditUser(data);
     setIsOpen(true);
   }
 
-  const handleDelete = async (data) => {
-    console.log(data);
-    const getToken = localStorage.getItem("token");
-    try {
-      const res = await axios.delete(
-        `http://localhost:5000/api/users/${data.id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: getToken,
-          },
-        }
-      );
-      console.log(res.data);
-      getUsers();
-    } catch (err) {
-      console.log(err.response.status);
-      if (err.response.status === 401) {
-        localStorage.removeItem("token");
-        navigate("/");
-      }
-    }
-  };
   function closeModal() {
     setIsOpen(false);
   }
-  const getUsers = useCallback(async () => {
-    console.log("get users");
-    const getToken = localStorage.getItem("token");
-    try {
-      const res = await axios.get("http://localhost:5000/api/users", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: getToken,
-        },
-      });
-      // console.log("res");
 
-      // console.log(res.data);
-      setUsers(res.data);
-    } catch (err) {
-      console.log(err.response.status);
-      if (err.response.status === 401) {
-        localStorage.removeItem("token");
-        navigate("/");
-      }
-    }
-  }, [navigate]);
+  const getUsers = async () => {
+    const res = await fetchAllUsers();
+    // console.log(res);
+    setUsers(res);
+  };
 
+  //run on every update
   useEffect(() => {
     getUsers();
-  }, [getUsers]);
+  }, [updateTable]);
+
+  const handleDelete = async (data) => {
+    if (!window.confirm("Are you sure you want to delete this user?")) {
+      return;
+    }
+    // console.log(data);
+    deleteUser(data.id);
+    setUpdateTable(!updateTable);
+  };
 
   return (
     <div className="HomeContainer">
@@ -86,7 +57,7 @@ function Users() {
               openModal={modalIsOpen}
               closeModal={closeModal}
               data={editUser}
-              isUpdated={getUsers}
+              isUpdated={() => setUpdateTable(!updateTable)}
             />
           )}
         </div>

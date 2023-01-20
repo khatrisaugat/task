@@ -23,6 +23,9 @@ function Artists() {
     setIsOpen(false);
   }
   const handleDelete = async (data) => {
+    if (!window.confirm("Are you sure you want to delete this artist?")) {
+      return;
+    }
     console.log(data);
     const getToken = localStorage.getItem("token");
     try {
