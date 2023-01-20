@@ -1,17 +1,19 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Sidebar from "../../components/Sidebar/sidebar";
 import Header from "../../components/Header/header";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Table from "../../components/Table/table";
-import EditArtist from "./editArtist";
 import CustomButton from "../../components/CustomButton/custom-button";
 import { AiOutlineUserAdd } from "react-icons/ai";
+import EditMusic from "./editMusic";
 
 function Artists() {
+  const { ArtistId } = useParams();
+  const [artist, setArtist] = useState({});
   const navigate = useNavigate();
-  const [artists, setArtists] = useState([]);
-  const [editArtist, setEditArtist] = useState({});
+  const [musics, setArtists] = useState([]);
+  const [editMusic, setEditArtist] = useState({});
   const [isAddModel, setIsAddModel] = useState(false);
   const [modalIsOpen, setIsOpen] = useState(false);
   function openModal(data) {
@@ -27,7 +29,7 @@ function Artists() {
     const getToken = localStorage.getItem("token");
     try {
       const res = await axios.delete(
-        `http://localhost:5000/api/artists/${data.id}`,
+        `http://localhost:5000/api/musics/${data.id}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -36,7 +38,7 @@ function Artists() {
         }
       );
       console.log(res.data);
-      getArtists();
+      getMusics();
     } catch (err) {
       console.log(err.response.status);
       if (err.response.status === 401) {
@@ -51,17 +53,20 @@ function Artists() {
     setIsOpen(true);
   };
 
-  const getArtists = useCallback(async () => {
+  const getMusics = useCallback(async () => {
     setIsAddModel(false);
-    console.log("get artists");
+    console.log("get musics");
     const getToken = localStorage.getItem("token");
     try {
-      const res = await axios.get("http://localhost:5000/api/artists", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: getToken,
-        },
-      });
+      const res = await axios.get(
+        `http://localhost:5000/api/musics/artist/${ArtistId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: getToken,
+          },
+        }
+      );
       console.log(res.data);
       if (res.data[0].dob) {
         res.data.forEach((artist) => {
@@ -76,24 +81,40 @@ function Artists() {
       console.log(res.data);
       setArtists(res.data);
     } catch (err) {
-      console.log(err.response.status);
+      console.log(err.response);
       if (err.response.status === 401) {
         localStorage.removeItem("token");
         navigate("/");
       }
     }
-  }, [navigate]);
+  }, [navigate, ArtistId]);
+  const getArtist = useCallback(async () => {
+    const getToken = localStorage.getItem("token");
+    try {
+      const res = await axios.get(
+        `http://localhost:5000/api/artists/${ArtistId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: getToken,
+          },
+        }
+      );
+      console.log("artist");
+      setArtist(res.data);
+      console.log(res.data);
+    } catch (err) {
+      console.log(err.response);
+      if (err.response.status === 401) {
+        localStorage.removeItem("token");
+        navigate("/");
+      }
+    }
+  }, [navigate, ArtistId]);
   useEffect(() => {
-    getArtists();
-  }, [getArtists]);
-
-  const CustomButtonRender = (id) => {
-    return (
-      <CustomButton onClick={() => navigate("/musics/" + id)}>
-        View Musics
-      </CustomButton>
-    );
-  };
+    getArtist();
+    getMusics();
+  }, [getMusics, getArtist]);
   return (
     <div className="HomeContainer">
       <Sidebar />
@@ -102,29 +123,22 @@ function Artists() {
         <div className="container">
           <CustomButton inverted onClick={handleAdd}>
             <AiOutlineUserAdd />
-            Add Artist
+            Add Music
           </CustomButton>
+          <h1>{artist.name}</h1>
           <Table
-            dataSet={artists}
+            dataSet={musics}
             handleDelete={handleDelete}
             handleEdit={openModal}
-            customField={{
-              comp: (
-                <CustomButton onClick={(id) => console.log(id)}>
-                  View Musics
-                </CustomButton>
-              ),
-              data: null,
-            }}
-            customRowComponent={CustomButtonRender}
           />
           {modalIsOpen && (
-            <EditArtist
+            <EditMusic
               openModal={modalIsOpen}
               closeModal={closeModal}
-              data={editArtist}
+              data={editMusic}
               isAddModel={isAddModel}
-              isUpdated={getArtists}
+              isUpdated={getMusics}
+              artistId={ArtistId}
             />
           )}
         </div>

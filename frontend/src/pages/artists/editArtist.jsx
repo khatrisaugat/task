@@ -91,8 +91,8 @@ function EditArtist({ openModal, closeModal, data, isUpdated, isAddModel }) {
     }
   };
 
-  const handleAdd = () => {
-    const artist = addArtist(state);
+  const handleAdd = async () => {
+    const artist = await addArtist(state);
     if (artist) {
       console.log(artist);
       isUpdated(true);

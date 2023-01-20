@@ -2,7 +2,7 @@ import React from "react";
 import { TableContainer } from "./table.styles";
 import TableRow from "../TableRow/table-row";
 
-function Table({ dataSet, handleEdit, handleDelete }) {
+function Table({ dataSet, handleEdit, handleDelete, customRowComponent }) {
   console.log(dataSet);
   const getHeaderColumn = (data) => {
     let headerColumn = Object.keys(data).filter(
@@ -18,9 +18,11 @@ function Table({ dataSet, handleEdit, handleDelete }) {
   const getBodyColumn = (dataSet) => {
     dataSet.forEach((data) => {
       delete data.password;
+      delete data.artist_id;
       delete data.created_at;
       delete data.updated_at;
       data.action = "actionBody";
+      customRowComponent && (data.custom = customRowComponent(data.id));
     });
 
     return dataSet;
