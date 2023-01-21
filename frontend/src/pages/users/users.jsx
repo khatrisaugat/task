@@ -21,6 +21,7 @@ function Users() {
     setIsOpen(false);
   }
 
+  //get Users from api
   const getUsers = async () => {
     const res = await fetchAllUsers();
     // console.log(res);

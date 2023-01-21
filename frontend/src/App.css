@@ -77,6 +77,21 @@ body {
   padding-right: 5em;
   box-sizing: border-box;
 }
+.page404 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  padding: 2em;
+  padding-right: 5em;
+  background: url("./images/404.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  box-sizing: border-box;
+}
 
 .activeLink {
   background-color: #fff;

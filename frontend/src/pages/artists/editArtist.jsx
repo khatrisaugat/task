@@ -5,7 +5,7 @@ import CustomButton from "../../components/CustomButton/custom-button";
 import { Wrapper, Content } from "../users/users.styles";
 import { AiOutlineClose } from "react-icons/ai";
 import { FaArrowDown } from "react-icons/fa";
-import axios from "axios";
+import { updateArtist, addArtist } from "../../api/artistsApi";
 
 Modal.setAppElement("#root");
 
@@ -33,53 +33,9 @@ function EditArtist({ openModal, closeModal, data, isUpdated, isAddModel }) {
   function afterOpenModal() {
     // references are now sync'd and can be accessed.
   }
-  const updateUser = async (user, id) => {
-    console.log("id", id);
-    const getToken = localStorage.getItem("token");
-    user = JSON.stringify(user);
-    try {
-      const res = await axios.put(
-        "http://localhost:5000/api/artists/" + id,
-        user,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: getToken,
-          },
-        }
-      );
-      console.log(res.data);
-      return res.data;
-    } catch (err) {
-      console.log(err.response.data);
-      return err.response.data;
-    }
-  };
-
-  const addArtist = async (artist) => {
-    const getToken = localStorage.getItem("token");
-    artist = JSON.stringify(artist);
-    try {
-      const res = await axios.post(
-        "http://localhost:5000/api/artists",
-        artist,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: getToken,
-          },
-        }
-      );
-      console.log(res.data);
-      return res.data;
-    } catch (err) {
-      console.log(err.response.data);
-      return err.response.data;
-    }
-  };
 
   const handleSubmit = async (event) => {
-    const user = await updateUser(state, data.id);
+    const user = await updateArtist(state, data.id);
     if (user[0]) {
       console.log(user[0]);
       isUpdated(true);

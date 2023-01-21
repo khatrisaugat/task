@@ -5,15 +5,15 @@ import useTable from "../../utils/useTable";
 import TableFooter from "../TableFooter/table-footer";
 
 function Table({
-  dataSet,
+  dataSet = [],
   handleEdit,
   handleDelete,
   customRowComponent,
   rowsPerPage = 3,
 }) {
   const [page, setPage] = useState(1);
-  console.log("dataSet");
-  console.log(dataSet);
+  // console.log("dataSet");
+  // console.log(dataSet);
   const getHeaderColumn = (data) => {
     let headerColumn = Object.keys(data).filter(
       (key) =>
@@ -38,7 +38,8 @@ function Table({
 
     return dataSet;
   };
-  const { slice, range } = useTable(getBodyColumn(dataSet), page, rowsPerPage);
+  getBodyColumn(dataSet);
+  const { slice, range } = useTable(dataSet, page, rowsPerPage);
   if (dataSet.length === 0) return <div>There is no data</div>;
   return (
     <TableContainer className="no-scroll">

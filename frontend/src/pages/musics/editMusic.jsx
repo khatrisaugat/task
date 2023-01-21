@@ -5,7 +5,7 @@ import CustomButton from "../../components/CustomButton/custom-button";
 import { Wrapper, Content } from "../users/users.styles";
 import { AiOutlineClose } from "react-icons/ai";
 import { FaArrowDown } from "react-icons/fa";
-import axios from "axios";
+import { addMusic, updateMusic } from "../../api/musicsApi";
 
 Modal.setAppElement("#root");
 
@@ -18,13 +18,14 @@ function EditMusic({
   isAddModel,
 }) {
   const [error, setError] = useState("");
-  console.log(data);
+  // console.log(data);
   const [state, setState] = useState({
     title: "",
     album_name: "",
     genre: "",
     artist_id: artistId,
   });
+
   useEffect(() => {
     if (!isAddModel) {
       data.action && delete data.action;
@@ -40,31 +41,6 @@ function EditMusic({
   function afterOpenModal() {
     // references are now sync'd and can be accessed.
   }
-  const updateMusic = async (music, id) => {
-    console.log("id", id);
-    const getToken = localStorage.getItem("token");
-    music = JSON.stringify(music);
-    try {
-      const res = await axios.put(
-        "http://localhost:5000/api/musics/" + id,
-        music,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: getToken,
-          },
-        }
-      );
-      console.log(res.data);
-      // if (res.data.success) {
-      //   localStorage.setItem("token", res.data.token);
-      // }
-      return res.data;
-    } catch (err) {
-      console.log(err.response.data);
-      return err.response.data;
-    }
-  };
 
   const handleSubmit = async (event) => {
     // console.log("state", state);
@@ -78,24 +54,6 @@ function EditMusic({
       setTimeout(() => {
         setError("");
       }, 3000);
-    }
-  };
-
-  const addMusic = async (music) => {
-    const getToken = localStorage.getItem("token");
-    music = JSON.stringify(music);
-    try {
-      const res = await axios.post("http://localhost:5000/api/musics", music, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: getToken,
-        },
-      });
-      console.log(res.data);
-      return res.data;
-    } catch (err) {
-      console.log(err.response.data);
-      return err.response.data;
     }
   };
 

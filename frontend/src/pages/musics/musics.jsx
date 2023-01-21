@@ -1,54 +1,40 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../../components/Sidebar/sidebar";
 import Header from "../../components/Header/header";
-import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import { useParams } from "react-router-dom";
 import Table from "../../components/Table/table";
 import CustomButton from "../../components/CustomButton/custom-button";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import EditMusic from "./editMusic";
+import { fetchMusicsFromArtist, deleteMusic } from "../../api/musicsApi";
+import { fetchArtistById } from "../../api/artistsApi";
 
 function Artists() {
   const { ArtistId } = useParams();
   const [artist, setArtist] = useState({});
-  const navigate = useNavigate();
-  const [musics, setArtists] = useState([]);
+  const [updateTable, setUpdateTable] = useState(false);
+  const [musics, setMusics] = useState([]);
   const [editMusic, setEditArtist] = useState({});
   const [isAddModel, setIsAddModel] = useState(false);
   const [modalIsOpen, setIsOpen] = useState(false);
+
   function openModal(data) {
-    console.log(data);
+    // console.log(data);
     setEditArtist(data);
     setIsOpen(true);
   }
+
   function closeModal() {
     setIsOpen(false);
   }
+
   const handleDelete = async (data) => {
-    if (!window.confirm("Are you sure you want to delete this artist?")) {
+    if (!window.confirm("Are you sure you want to delete this music?")) {
       return;
     }
-    console.log(data);
-    const getToken = localStorage.getItem("token");
-    try {
-      const res = await axios.delete(
-        `http://localhost:5000/api/musics/${data.id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: getToken,
-          },
-        }
-      );
-      console.log(res.data);
-      getMusics();
-    } catch (err) {
-      console.log(err.response.status);
-      if (err.response.status === 401) {
-        localStorage.removeItem("token");
-        navigate("/");
-      }
-    }
+    // console.log(data);
+    deleteMusic(data.id);
+    setUpdateTable(!updateTable);
   };
 
   const handleAdd = () => {
@@ -56,68 +42,24 @@ function Artists() {
     setIsOpen(true);
   };
 
-  const getMusics = useCallback(async () => {
+  const getMusics = async () => {
     setIsAddModel(false);
-    console.log("get musics");
-    const getToken = localStorage.getItem("token");
-    try {
-      const res = await axios.get(
-        `http://localhost:5000/api/musics/artist/${ArtistId}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: getToken,
-          },
-        }
-      );
-      console.log(res.data);
-      if (res.data[0].dob) {
-        res.data.forEach((artist) => {
-          artist.dob =
-            new Date(artist.dob).getFullYear() +
-            "-" +
-            (new Date(artist.dob).getMonth() + 1) +
-            "-" +
-            new Date(artist.dob).getDate();
-        });
-      }
-      console.log(res.data);
-      setArtists(res.data);
-    } catch (err) {
-      console.log(err.response);
-      if (err.response.status === 401) {
-        localStorage.removeItem("token");
-        navigate("/");
-      }
-    }
-  }, [navigate, ArtistId]);
-  const getArtist = useCallback(async () => {
-    const getToken = localStorage.getItem("token");
-    try {
-      const res = await axios.get(
-        `http://localhost:5000/api/artists/${ArtistId}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: getToken,
-          },
-        }
-      );
-      console.log("artist");
-      setArtist(res.data);
-      console.log(res.data);
-    } catch (err) {
-      console.log(err.response);
-      if (err.response.status === 401) {
-        localStorage.removeItem("token");
-        navigate("/");
-      }
-    }
-  }, [navigate, ArtistId]);
+    const res = await fetchMusicsFromArtist(ArtistId);
+    // console.log("res", res);
+    setMusics(res);
+  };
+  const getArtist = async () => {
+    const res = await fetchArtistById(ArtistId);
+    setArtist(res);
+  };
+
   useEffect(() => {
     getArtist();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
     getMusics();
-  }, [getMusics, getArtist]);
+  }, [updateTable]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <div className="HomeContainer">
       <Sidebar />
@@ -140,7 +82,7 @@ function Artists() {
               closeModal={closeModal}
               data={editMusic}
               isAddModel={isAddModel}
-              isUpdated={getMusics}
+              isUpdated={() => setUpdateTable(!updateTable)}
               artistId={ArtistId}
             />
           )}

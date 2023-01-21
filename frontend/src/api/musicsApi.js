@@ -1,49 +1,53 @@
 import axios from "axios";
 import { apiLink } from "./../utils/Config";
 
-export const fetchAllUsers = async () => {
+export const fetchMusicsFromArtist = async (ArtistId) => {
   try {
     const getToken = localStorage.getItem("token");
-    const res = await axios.get(`${apiLink}users`, {
+    const res = await axios.get(`${apiLink}musics/artist/${ArtistId}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: getToken,
       },
     });
     // console.log(res.data);
+    if (res.data[0].dob) {
+      res.data.forEach((artist) => {
+        artist.dob =
+          new Date(artist.dob).getFullYear() +
+          "-" +
+          (new Date(artist.dob).getMonth() + 1) +
+          "-" +
+          new Date(artist.dob).getDate();
+      });
+    }
+    // console.log(res.data);
     return res.data;
   } catch (err) {
     console.log(err.response);
-    if (err.response.status === 401) {
-      console.log("401");
-    }
   }
 };
 
-export const deleteUser = async (id) => {
+export const deleteMusic = async (id) => {
   try {
     const getToken = localStorage.getItem("token");
-    const res = await axios.delete(`${apiLink}users/${id}`, {
+    const res = await axios.delete(`${apiLink}musics/${id}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: getToken,
       },
     });
-    console.log(res.data);
+    return res.data;
+    // console.log(res.data);
   } catch (err) {
     console.log(err.response.status);
-    if (err.response.status === 401) {
-      console.log("401");
-      console.log(err.response.data);
-    }
   }
 };
-
-export const updateUser = async (user, id) => {
-  user = JSON.stringify(user);
+export const addMusic = async (music) => {
+  music = JSON.stringify(music);
   try {
     const getToken = localStorage.getItem("token");
-    const res = await axios.put(`${apiLink}users/${id}`, user, {
+    const res = await axios.post(`${apiLink}musics`, music, {
       headers: {
         "Content-Type": "application/json",
         Authorization: getToken,
@@ -53,21 +57,27 @@ export const updateUser = async (user, id) => {
     return res.data;
   } catch (err) {
     console.log(err.response.data);
+    return err.response.data;
   }
 };
 
-export const getCurrentUser = async () => {
+export const updateMusic = async (music, id) => {
+  music = JSON.stringify(music);
   try {
     const getToken = localStorage.getItem("token");
-    const res = await axios.get(`${apiLink}users/current`, {
+    const res = await axios.put(`${apiLink}musics/` + id, music, {
       headers: {
         "Content-Type": "application/json",
         Authorization: getToken,
       },
     });
     // console.log(res.data);
+    // if (res.data.success) {
+    //   localStorage.setItem("token", res.data.token);
+    // }
     return res.data;
   } catch (err) {
-    console.log(err.response);
+    // console.log(err.response.data);
+    return err.response.data;
   }
 };

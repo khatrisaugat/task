@@ -5,17 +5,19 @@ import CustomButton from "../../components/CustomButton/custom-button";
 import { Wrapper, Content } from "./users.styles";
 import { AiOutlineClose } from "react-icons/ai";
 import { FaArrowDown } from "react-icons/fa";
-import axios from "axios";
+import { updateUser } from "../../api/usersApi";
 
 Modal.setAppElement("#root");
 
 function EditUser({ openModal, closeModal, data, isUpdated }) {
   const [error, setError] = useState("");
-  console.log(data);
+  // console.log(data);
+
   useEffect(() => {
     data.action && delete data.action;
     setState(data);
   }, [data]);
+
   const [state, setState] = useState({
     first_name: "",
     last_name: "",
@@ -25,44 +27,17 @@ function EditUser({ openModal, closeModal, data, isUpdated }) {
     gender: "m",
     address: "",
   });
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     setState({ ...state, [name]: value });
     console.log(state);
   };
-  function afterOpenModal() {
-    // references are now sync'd and can be accessed.
-  }
-  const updateUser = async (user, id) => {
-    console.log("id", id);
-    const getToken = localStorage.getItem("token");
-    user = JSON.stringify(user);
-    try {
-      const res = await axios.put(
-        "http://localhost:5000/api/users/" + id,
-        user,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: getToken,
-          },
-        }
-      );
-      console.log(res.data);
-      // if (res.data.success) {
-      //   localStorage.setItem("token", res.data.token);
-      // }
-      return res.data;
-    } catch (err) {
-      console.log(err.response.data);
-      return err.response.data;
-    }
-  };
 
   const handleSubmit = async (event) => {
     const user = await updateUser(state, data.id);
     if (user[0]) {
-      console.log(user[0]);
+      // console.log(user[0]);
       isUpdated(true);
       closeModal();
     } else if (user.error) {
@@ -77,7 +52,6 @@ function EditUser({ openModal, closeModal, data, isUpdated }) {
     <Wrapper>
       <Modal
         isOpen={openModal}
-        onAfterOpen={afterOpenModal}
         onRequestClose={closeModal}
         className="modal"
         contentLabel="Example Modal"
