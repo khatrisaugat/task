@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Content } from "./register.styles";
 import FormInput from "./../FormInput/form-input";
 import CustomButton from "../CustomButton/custom-button";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { registerUser } from "../../api/authApi";
 
 function Register() {
   const [error, setError] = useState("");
@@ -41,29 +41,6 @@ function Register() {
     }
   };
 
-  const registerUser = async (user) => {
-    console.log(user);
-    user = JSON.stringify(user);
-    try {
-      const res = await axios.post(
-        "http://localhost:5000/api/users/register",
-        user,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      console.log(res.data);
-      if (res.data.success) {
-        localStorage.setItem("token", res.data.token);
-      }
-      return res.data;
-    } catch (err) {
-      console.log(err.response.data);
-      return err.response.data;
-    }
-  };
   return (
     <Content className="no-scroll">
       <h1>Register User</h1>
