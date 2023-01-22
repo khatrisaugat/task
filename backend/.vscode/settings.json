@@ -1,0 +1,4 @@
+{
+  "appService.defaultWebAppToDeploy": "/subscriptions/47157121-f780-4771-9c48-867d098719a9/AppServices/subscriptions/47157121-f780-4771-9c48-867d098719a9/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/cloco",
+  "appService.deploySubpath": "."
+}
