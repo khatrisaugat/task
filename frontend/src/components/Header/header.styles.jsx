@@ -11,7 +11,7 @@ export const HeaderContainer = styled.div`
   padding-bottom: 2.5rem;
   background-color: #fff;
   opacity: 1;
-  z-index: 1000;
+  z-index: 99;
   border-radius: 30px;
   box-sizing: border-box;
 `;

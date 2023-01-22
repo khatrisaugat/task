@@ -10,6 +10,7 @@ import { updateUser } from "../../api/usersApi";
 Modal.setAppElement("#root");
 
 function EditUser({ openModal, closeModal, data, isUpdated }) {
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   // console.log(data);
 
@@ -35,10 +36,12 @@ function EditUser({ openModal, closeModal, data, isUpdated }) {
   };
 
   const handleSubmit = async (event) => {
+    setIsLoading(true);
     const user = await updateUser(state, data.id);
     if (user[0]) {
       // console.log(user[0]);
       isUpdated(true);
+      setIsLoading(false);
       closeModal();
     } else if (user.error) {
       setError(user.error);
@@ -139,7 +142,9 @@ function EditUser({ openModal, closeModal, data, isUpdated }) {
             handleChange={handleChange}
             required
           />
-          <CustomButton onClick={handleSubmit}>Update</CustomButton>
+          <CustomButton onClick={handleSubmit} isLoading={isLoading}>
+            Update
+          </CustomButton>
         </Content>
         <FaArrowDown className="blinkAnimation" />
       </Modal>

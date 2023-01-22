@@ -7,9 +7,13 @@ import EditArtist from "./editArtist";
 import CustomButton from "../../components/CustomButton/custom-button";
 import { AiOutlineUserAdd, AiOutlineSound } from "react-icons/ai";
 import { fetchAllArtists, deleteArtist } from "../../api/artistsApi";
+import { WithSpinner } from "./../../components/with-spinner/with-spinner.component";
+
+const TableWithSpinner = WithSpinner(Table);
 
 function Artists() {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
   const [artists, setArtists] = useState([]);
   const [updateTable, setUpdateTable] = useState(false);
   const [editArtist, setEditArtist] = useState({});
@@ -30,6 +34,7 @@ function Artists() {
     if (!window.confirm("Are you sure you want to delete this artist?")) {
       return;
     }
+    setIsLoading(true);
     console.log(data);
     deleteArtist(data.id);
     setUpdateTable(!updateTable);
@@ -44,6 +49,7 @@ function Artists() {
     setIsAddModel(false);
     const res = await fetchAllArtists();
     setArtists(res);
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -68,11 +74,12 @@ function Artists() {
             <AiOutlineUserAdd />
             Add Artist
           </CustomButton>
-          <Table
+          <TableWithSpinner
             dataSet={artists}
             handleDelete={handleDelete}
             handleEdit={openModal}
             customRowComponent={CustomButtonRender}
+            isLoading={isLoading}
           />
           {modalIsOpen && (
             <EditArtist
@@ -81,6 +88,7 @@ function Artists() {
               data={editArtist}
               isAddModel={isAddModel}
               isUpdated={() => setUpdateTable(!updateTable)}
+              isLoading={(loading) => setIsLoading(loading)}
             />
           )}
         </div>

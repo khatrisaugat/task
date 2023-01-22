@@ -6,11 +6,15 @@ import { Wrapper, Content } from "../users/users.styles";
 import { AiOutlineClose } from "react-icons/ai";
 import { FaArrowDown } from "react-icons/fa";
 import { updateArtist, addArtist } from "../../api/artistsApi";
+import { WithSpinner } from "../../components/with-spinner/with-spinner.component";
 
 Modal.setAppElement("#root");
 
+const ModalWithSpnner = WithSpinner(Modal);
+
 function EditArtist({ openModal, closeModal, data, isUpdated, isAddModel }) {
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     if (!isAddModel) {
       data.action && delete data.action;
@@ -30,16 +34,19 @@ function EditArtist({ openModal, closeModal, data, isUpdated, isAddModel }) {
     setState({ ...state, [name]: value });
     console.log(state);
   };
+
   function afterOpenModal() {
     // references are now sync'd and can be accessed.
   }
 
   const handleSubmit = async (event) => {
+    setIsLoading(true);
     const user = await updateArtist(state, data.id);
     if (user[0]) {
       console.log(user[0]);
       isUpdated(true);
       closeModal();
+      setIsLoading(false);
     } else if (user.error) {
       setError(user.error);
       setTimeout(() => {
@@ -49,10 +56,12 @@ function EditArtist({ openModal, closeModal, data, isUpdated, isAddModel }) {
   };
 
   const handleAdd = async () => {
+    setIsLoading(true);
     const artist = await addArtist(state);
     if (artist) {
       console.log(artist);
       isUpdated(true);
+      setIsLoading(false);
       closeModal();
     } else if (artist.error) {
       setError(artist.error);
@@ -64,7 +73,7 @@ function EditArtist({ openModal, closeModal, data, isUpdated, isAddModel }) {
 
   return (
     <Wrapper>
-      <Modal
+      <ModalWithSpnner
         isOpen={openModal}
         onAfterOpen={afterOpenModal}
         onRequestClose={closeModal}
@@ -143,13 +152,17 @@ function EditArtist({ openModal, closeModal, data, isUpdated, isAddModel }) {
             required
           />
           {isAddModel ? (
-            <CustomButton onClick={handleAdd}>Add</CustomButton>
+            <CustomButton onClick={handleAdd} isLoading={isLoading}>
+              Add
+            </CustomButton>
           ) : (
-            <CustomButton onClick={handleSubmit}>Update</CustomButton>
+            <CustomButton onClick={handleSubmit} isLoading={isLoading}>
+              Update
+            </CustomButton>
           )}
         </Content>
         <FaArrowDown className="blinkAnimation" />
-      </Modal>
+      </ModalWithSpnner>
     </Wrapper>
   );
 }

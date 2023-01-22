@@ -8,8 +8,12 @@ import { AiOutlineUserAdd } from "react-icons/ai";
 import EditMusic from "./editMusic";
 import { fetchMusicsFromArtist, deleteMusic } from "../../api/musicsApi";
 import { fetchArtistById } from "../../api/artistsApi";
+import { WithSpinner } from "./../../components/with-spinner/with-spinner.component";
+
+const TableWithSpinner = WithSpinner(Table);
 
 function Artists() {
+  const [isLoading, setIsLoading] = useState(true);
   const { ArtistId } = useParams();
   const [artist, setArtist] = useState({});
   const [updateTable, setUpdateTable] = useState(false);
@@ -32,6 +36,7 @@ function Artists() {
     if (!window.confirm("Are you sure you want to delete this music?")) {
       return;
     }
+    setIsLoading(true);
     // console.log(data);
     deleteMusic(data.id);
     setUpdateTable(!updateTable);
@@ -44,9 +49,11 @@ function Artists() {
 
   const getMusics = async () => {
     setIsAddModel(false);
+    setIsLoading(true);
     const res = await fetchMusicsFromArtist(ArtistId);
     // console.log("res", res);
     setMusics(res);
+    setIsLoading(false);
   };
   const getArtist = async () => {
     const res = await fetchArtistById(ArtistId);
@@ -71,10 +78,11 @@ function Artists() {
             Add Music
           </CustomButton>
           <h1>{artist.name}</h1>
-          <Table
+          <TableWithSpinner
             dataSet={musics}
             handleDelete={handleDelete}
             handleEdit={openModal}
+            isLoading={isLoading}
           />
           {modalIsOpen && (
             <EditMusic

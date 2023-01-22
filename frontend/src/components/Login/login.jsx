@@ -7,6 +7,7 @@ import { loginUser } from "../../api/authApi";
 
 function Login() {
   const [state, setState] = useState({ email: "", password: "" });
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const handleChange = (event) => {
@@ -15,10 +16,13 @@ function Login() {
     console.log(state);
   };
   const handleSubmit = async (event) => {
+    setIsLoading(true);
     const data = await loginUser(state);
     if (data.success) {
+      setIsLoading(false);
       navigate("/home");
     } else if (data.error) {
+      setIsLoading(false);
       setError(data.error);
       setTimeout(() => {
         setError("");
@@ -45,7 +49,9 @@ function Login() {
         handleChange={handleChange}
         required
       />
-      <CustomButton onClick={handleSubmit}>Login</CustomButton>
+      <CustomButton onClick={handleSubmit} isLoading={isLoading}>
+        Login
+      </CustomButton>
       <p className="error">{error}</p>
     </Content>
   );

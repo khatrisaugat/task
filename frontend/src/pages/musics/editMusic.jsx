@@ -18,6 +18,7 @@ function EditMusic({
   isAddModel,
 }) {
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   // console.log(data);
   const [state, setState] = useState({
     title: "",
@@ -43,11 +44,13 @@ function EditMusic({
   }
 
   const handleSubmit = async (event) => {
+    setIsLoading(true);
     // console.log("state", state);
     const music = await updateMusic(state, data.id);
     if (music[0]) {
       console.log(music[0]);
       isUpdated(true);
+      setIsLoading(false);
       closeModal();
     } else if (music.error) {
       setError(music.error);
@@ -58,11 +61,13 @@ function EditMusic({
   };
 
   const handleAdd = async () => {
+    setIsLoading(true);
     const music = await addMusic(state);
     console.log(music);
     if (music) {
       console.log(music);
       isUpdated(true);
+      setIsLoading(false);
       closeModal();
     } else if (music.error) {
       setError(music.error);
@@ -113,9 +118,13 @@ function EditMusic({
             required
           />
           {isAddModel ? (
-            <CustomButton onClick={handleAdd}>Add</CustomButton>
+            <CustomButton onClick={handleAdd} isLoading={isLoading}>
+              Add
+            </CustomButton>
           ) : (
-            <CustomButton onClick={handleSubmit}>Update</CustomButton>
+            <CustomButton onClick={handleSubmit} isLoading={isLoading}>
+              Update
+            </CustomButton>
           )}
         </Content>
         <FaArrowDown className="blinkAnimation" />

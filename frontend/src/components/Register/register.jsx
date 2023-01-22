@@ -7,6 +7,7 @@ import { registerUser } from "../../api/authApi";
 
 function Register() {
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const get18YearsAgo = () => {
     const date = new Date();
@@ -30,10 +31,13 @@ function Register() {
     console.log(state);
   };
   const handleSubmit = async (event) => {
+    setIsLoading(true);
     const data = await registerUser(state);
     if (data.success) {
+      setIsLoading(false);
       navigate("/home");
     } else if (data.error) {
+      setIsLoading(false);
       setError(data.error);
       setTimeout(() => {
         setError("");
@@ -130,7 +134,9 @@ function Register() {
         handleChange={handleChange}
         required
       />
-      <CustomButton onClick={handleSubmit}>Register</CustomButton>
+      <CustomButton onClick={handleSubmit} isLoading={isLoading}>
+        Register
+      </CustomButton>
     </Content>
   );
 }

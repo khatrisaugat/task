@@ -23,6 +23,14 @@ const buttonStyles = css`
     color: #000;
     animation: pulse 1s infinite;
   }
+  &:disabled {
+    background-color: #fff;
+    border: 1px solid #000;
+    color: #000;
+    opacity: 0.5;
+    cursor: not-allowed;
+    animation: none;
+  }
   @keyframes pulse {
     0% {
       border: 1px solid #000;
