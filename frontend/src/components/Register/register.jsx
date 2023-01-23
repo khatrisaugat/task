@@ -32,13 +32,22 @@ function Register() {
   };
   const handleSubmit = async (event) => {
     setIsLoading(true);
-    const data = await registerUser(state);
-    if (data.success) {
+    try {
+      const data = await registerUser(state);
+      if (data.success) {
+        setIsLoading(false);
+        navigate("/home");
+      } else if (data.error) {
+        setIsLoading(false);
+        setError(data.error);
+        setTimeout(() => {
+          setError("");
+        }, 3000);
+      }
+    } catch (err) {
+      console.log(err);
       setIsLoading(false);
-      navigate("/home");
-    } else if (data.error) {
-      setIsLoading(false);
-      setError(data.error);
+      setError(err.message);
       setTimeout(() => {
         setError("");
       }, 3000);
@@ -48,7 +57,7 @@ function Register() {
   return (
     <Content className="no-scroll">
       <h1>Register User</h1>
-      <p className="error">{error}</p>
+
       <FormInput
         label="First Name"
         name="first_name"
@@ -134,6 +143,7 @@ function Register() {
         handleChange={handleChange}
         required
       />
+      <div className={error ? `error` : null}>{error}</div>
       <CustomButton onClick={handleSubmit} isLoading={isLoading}>
         Register
       </CustomButton>

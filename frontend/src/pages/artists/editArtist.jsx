@@ -41,14 +41,22 @@ function EditArtist({ openModal, closeModal, data, isUpdated, isAddModel }) {
 
   const handleSubmit = async (event) => {
     setIsLoading(true);
-    const user = await updateArtist(state, data.id);
-    if (user[0]) {
-      console.log(user[0]);
-      isUpdated(true);
-      closeModal();
-      setIsLoading(false);
-    } else if (user.error) {
-      setError(user.error);
+    try {
+      const user = await updateArtist(state, data.id);
+      if (user[0]) {
+        console.log(user[0]);
+        isUpdated(true);
+        closeModal();
+        setIsLoading(false);
+      } else if (user.error) {
+        setError(user.error);
+        setTimeout(() => {
+          setError("");
+        }, 3000);
+      }
+    } catch (err) {
+      console.log(err);
+      setError(err.message);
       setTimeout(() => {
         setError("");
       }, 3000);
@@ -57,14 +65,23 @@ function EditArtist({ openModal, closeModal, data, isUpdated, isAddModel }) {
 
   const handleAdd = async () => {
     setIsLoading(true);
-    const artist = await addArtist(state);
-    if (artist) {
-      console.log(artist);
-      isUpdated(true);
+    try {
+      const artist = await addArtist(state);
+      if (artist) {
+        console.log(artist);
+        isUpdated(true);
+        setIsLoading(false);
+        closeModal();
+      } else if (artist.error) {
+        setError(artist.error);
+        setTimeout(() => {
+          setError("");
+        }, 3000);
+      }
+    } catch (err) {
+      console.log(err);
+      setError(err.message);
       setIsLoading(false);
-      closeModal();
-    } else if (artist.error) {
-      setError(artist.error);
       setTimeout(() => {
         setError("");
       }, 3000);
@@ -83,7 +100,7 @@ function EditArtist({ openModal, closeModal, data, isUpdated, isAddModel }) {
         <CustomButton closeButton onClick={closeModal}>
           <AiOutlineClose />
         </CustomButton>
-        <p className="error">{error}</p>
+        <div className={error ? `error` : null}>{error}</div>
         <Content className="no-scroll">
           <h1>{isAddModel ? "Add Artist" : "Edit Artist Details"}</h1>
           <FormInput

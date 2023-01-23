@@ -16,6 +16,7 @@ export const fetchArtistById = async (ArtistId) => {
     // console.log(res.data);
   } catch (err) {
     console.log(err.response);
+    throw err.response.data;
   }
 };
 
@@ -45,6 +46,7 @@ export const fetchAllArtists = async () => {
     return res.data;
   } catch (err) {
     console.log(err.response.status);
+    throw err.response.data;
   }
 };
 
@@ -61,6 +63,7 @@ export const deleteArtist = async (id) => {
     // console.log(res.data);
   } catch (err) {
     console.log(err.response.status);
+    throw err.response.data;
   }
 };
 
@@ -79,6 +82,7 @@ export const updateArtist = async (artist, id) => {
     return res.data;
   } catch (err) {
     console.log(err.response.data);
+    throw err.response.data;
   }
 };
 
@@ -95,6 +99,7 @@ export const addArtist = async (artist) => {
     // console.log(res.data);
     return res.data;
   } catch (err) {
-    console.log(err.response.data);
+    console.log(err);
+    throw err.response.data;
   }
 };

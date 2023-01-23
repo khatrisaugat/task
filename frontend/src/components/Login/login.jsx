@@ -17,13 +17,22 @@ function Login() {
   };
   const handleSubmit = async (event) => {
     setIsLoading(true);
-    const data = await loginUser(state);
-    if (data.success) {
+    try {
+      const data = await loginUser(state);
+      if (data.success) {
+        setIsLoading(false);
+        navigate("/home");
+      } else if (data.error) {
+        setIsLoading(false);
+        setError(data.error);
+        setTimeout(() => {
+          setError("");
+        }, 3000);
+      }
+    } catch (err) {
+      console.log(err);
       setIsLoading(false);
-      navigate("/home");
-    } else if (data.error) {
-      setIsLoading(false);
-      setError(data.error);
+      setError(err.message);
       setTimeout(() => {
         setError("");
       }, 3000);
@@ -32,7 +41,7 @@ function Login() {
   return (
     <Content className="no-scroll">
       <h1>User Login</h1>
-
+      <div className={error ? `error` : null}>{error}</div>
       <FormInput
         label="Email"
         name="email"
@@ -52,7 +61,6 @@ function Login() {
       <CustomButton onClick={handleSubmit} isLoading={isLoading}>
         Login
       </CustomButton>
-      <p className="error">{error}</p>
     </Content>
   );
 }

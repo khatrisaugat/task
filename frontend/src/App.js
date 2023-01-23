@@ -15,15 +15,21 @@ function App() {
   const location = useLocation();
   const CheckUser = async () => {
     const token = localStorage.getItem("token");
-    console.log(token);
-    console.log(location.pathname);
+    // console.log(token);
+    // console.log(location.pathname);
     if (token) {
-      const user = await getCurrentUser();
-      console.log(user);
-      if (user.email) {
-        if (location.pathname === "/") {
-          navigate("/home");
+      try {
+        const user = await getCurrentUser();
+        // console.log(user);
+        if (user.email) {
+          if (location.pathname === "/") {
+            navigate("/home");
+          }
         }
+      } catch (err) {
+        // console.log(err);
+        localStorage.removeItem("token");
+        navigate("/");
       }
     }
   };

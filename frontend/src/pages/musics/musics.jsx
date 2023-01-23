@@ -13,6 +13,7 @@ import { WithSpinner } from "./../../components/with-spinner/with-spinner.compon
 const TableWithSpinner = WithSpinner(Table);
 
 function Artists() {
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const { ArtistId } = useParams();
   const [artist, setArtist] = useState({});
@@ -37,8 +38,17 @@ function Artists() {
       return;
     }
     setIsLoading(true);
+    try {
+      const res = await deleteMusic(data.id);
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+      setError(err.message);
+      setTimeout(() => {
+        setError("");
+      }, 3000);
+    }
     // console.log(data);
-    deleteMusic(data.id);
     setUpdateTable(!updateTable);
   };
 
@@ -50,10 +60,19 @@ function Artists() {
   const getMusics = async () => {
     setIsAddModel(false);
     setIsLoading(true);
-    const res = await fetchMusicsFromArtist(ArtistId);
-    // console.log("res", res);
-    setMusics(res);
-    setIsLoading(false);
+    try {
+      const res = await fetchMusicsFromArtist(ArtistId);
+      // console.log("res", res);
+      setMusics(res);
+      setIsLoading(false);
+    } catch (err) {
+      console.log(err);
+      setError(err.message);
+      setTimeout(() => {
+        setError("");
+      }, 3000);
+      setIsLoading(false);
+    }
   };
   const getArtist = async () => {
     const res = await fetchArtistById(ArtistId);
@@ -78,6 +97,7 @@ function Artists() {
             Add Music
           </CustomButton>
           <h1>{artist.name}</h1>
+          <div className={error ? `error` : null}>{error}</div>
           <TableWithSpinner
             dataSet={musics}
             handleDelete={handleDelete}

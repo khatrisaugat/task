@@ -46,14 +46,22 @@ function EditMusic({
   const handleSubmit = async (event) => {
     setIsLoading(true);
     // console.log("state", state);
-    const music = await updateMusic(state, data.id);
-    if (music[0]) {
-      console.log(music[0]);
-      isUpdated(true);
-      setIsLoading(false);
-      closeModal();
-    } else if (music.error) {
-      setError(music.error);
+    try {
+      const music = await updateMusic(state, data.id);
+      if (music[0]) {
+        console.log(music[0]);
+        isUpdated(true);
+        setIsLoading(false);
+        closeModal();
+      } else if (music.error) {
+        setError(music.error);
+        setTimeout(() => {
+          setError("");
+        }, 3000);
+      }
+    } catch (err) {
+      console.log(err);
+      setError(err.message);
       setTimeout(() => {
         setError("");
       }, 3000);
@@ -62,15 +70,23 @@ function EditMusic({
 
   const handleAdd = async () => {
     setIsLoading(true);
-    const music = await addMusic(state);
-    console.log(music);
-    if (music) {
+    try {
+      const music = await addMusic(state);
       console.log(music);
-      isUpdated(true);
-      setIsLoading(false);
-      closeModal();
-    } else if (music.error) {
-      setError(music.error);
+      if (music) {
+        console.log(music);
+        isUpdated(true);
+        setIsLoading(false);
+        closeModal();
+      } else if (music.error) {
+        setError(music.error);
+        setTimeout(() => {
+          setError("");
+        }, 3000);
+      }
+    } catch (err) {
+      console.log(err);
+      setError(err.message);
       setTimeout(() => {
         setError("");
       }, 3000);
@@ -89,7 +105,7 @@ function EditMusic({
         <CustomButton closeButton onClick={closeModal}>
           <AiOutlineClose />
         </CustomButton>
-        <p className="error">{error}</p>
+        <div className={error ? `error` : null}>{error}</div>
         <Content className="no-scroll">
           <h1>{isAddModel ? `Add Music` : `Edit Music Details`}</h1>
           <FormInput

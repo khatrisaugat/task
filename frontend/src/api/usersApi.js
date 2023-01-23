@@ -17,6 +17,7 @@ export const fetchAllUsers = async () => {
     if (err.response.status === 401) {
       console.log("401");
     }
+    throw err.response.data;
   }
 };
 
@@ -36,6 +37,7 @@ export const deleteUser = async (id) => {
       console.log("401");
       console.log(err.response.data);
     }
+    throw err.response.data;
   }
 };
 
@@ -53,6 +55,7 @@ export const updateUser = async (user, id) => {
     return res.data;
   } catch (err) {
     console.log(err.response.data);
+    throw err.response.data;
   }
 };
 
@@ -69,5 +72,6 @@ export const getCurrentUser = async () => {
     return res.data;
   } catch (err) {
     console.log(err.response);
+    throw err.response.data;
   }
 };

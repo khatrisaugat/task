@@ -5,7 +5,7 @@ exports.getAllUsers = async (req, res) => {
     return res.json(users);
   } catch (err) {
     console.log(err);
-    return res.json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 };
 
@@ -15,7 +15,7 @@ exports.getUserById = async (req, res) => {
     return res.json(user);
   } catch (err) {
     console.log(err);
-    return res.json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 };
 
@@ -28,7 +28,7 @@ exports.updateUserDetail = async (req, res) => {
     return res.json(updatedUser);
   } catch (err) {
     console.log(err);
-    return res.json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 };
 
@@ -38,6 +38,6 @@ exports.deleteUser = async (req, res) => {
     return res.json(deletedUser);
   } catch (err) {
     console.log(err);
-    return res.json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 };

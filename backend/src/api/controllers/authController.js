@@ -1,11 +1,21 @@
+const validations = require("../validations");
+const validateRegisterInput = validations.registerValidate;
+const validateLoginInput = validations.loginValidate;
+
 const authService = require("./../services/authService");
 exports.register_a_user = async (req, res) => {
   req.body = JSON.parse(JSON.stringify(req.body));
+  // Form validation
+  const { errors, isValid } = validateRegisterInput(req.body);
+  // Check validation
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
   //exception handling
   try {
     // Check if user exists
     if (await authService.check_if_user_exists(req.body.email)) {
-      return res.status(400).json({ email: "Email already exists" });
+      return res.status(400).json({ message: "Email already exists" });
     } else {
       // Hash password before saving in database
       const newPassword = await authService.hash_password(
@@ -40,7 +50,7 @@ exports.register_a_user = async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    return res.json({ error: "Something went wrong" });
+    return res.status(400).json({ message: "Something went wrong" });
   }
 };
 
@@ -48,11 +58,17 @@ exports.login_a_user = async (req, res) => {
   req.body = JSON.parse(JSON.stringify(req.body));
   const email = req.body.email;
   const password = req.body.password;
+  // Form validation
+  const { errors, isValid } = validateLoginInput(req.body);
+  // Check validation
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
   //exception handling
   try {
     // Check if user exists
     if (!(await authService.check_if_user_exists(req.body.email))) {
-      return res.json({ error: "User doesn't exist" });
+      return res.status(401).json({ message: "Credentials incorrect" });
     }
     const user = await authService.find_user(email);
     // Check password
@@ -72,11 +88,11 @@ exports.login_a_user = async (req, res) => {
         token: "Bearer " + token,
       });
     } else {
-      return res.json({ error: "Credentials incorrect" });
+      return res.status(401).json({ message: "Credentials incorrect" });
     }
   } catch (err) {
     console.log(err);
-    return res.json({ error: "Something went wrong" });
+    return res.status(400).json({ message: "Something went wrong" });
   }
 };
 
@@ -89,6 +105,6 @@ exports.current_user = async (req, res, next) => {
     return res.json(user);
   } catch (err) {
     console.log(err);
-    return res.json({ error: "Something went wrong" });
+    return res.status(401).json({ message: "Something went wrong" });
   }
 };

@@ -13,6 +13,7 @@ const TableWithSpinner = WithSpinner(Table);
 
 function Artists() {
   const navigate = useNavigate();
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [artists, setArtists] = useState([]);
   const [updateTable, setUpdateTable] = useState(false);
@@ -36,7 +37,16 @@ function Artists() {
     }
     setIsLoading(true);
     console.log(data);
-    deleteArtist(data.id);
+    try {
+      const res = await deleteArtist(data.id);
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+      setError(err.message);
+      setTimeout(() => {
+        setError("");
+      }, 3000);
+    }
     setUpdateTable(!updateTable);
   };
 
@@ -47,9 +57,18 @@ function Artists() {
 
   const getArtists = async () => {
     setIsAddModel(false);
-    const res = await fetchAllArtists();
-    setArtists(res);
-    setIsLoading(false);
+    try {
+      const res = await fetchAllArtists();
+      setArtists(res);
+      setIsLoading(false);
+    } catch (err) {
+      console.log(err);
+      setError(err.message);
+      setTimeout(() => {
+        setError("");
+      }, 3000);
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -74,6 +93,7 @@ function Artists() {
             <AiOutlineUserAdd />
             Add Artist
           </CustomButton>
+          <div className={error ? `error` : null}>{error}</div>
           <TableWithSpinner
             dataSet={artists}
             handleDelete={handleDelete}

@@ -25,6 +25,7 @@ export const fetchMusicsFromArtist = async (ArtistId) => {
     return res.data;
   } catch (err) {
     console.log(err.response);
+    throw err.response.data;
   }
 };
 
@@ -41,6 +42,7 @@ export const deleteMusic = async (id) => {
     // console.log(res.data);
   } catch (err) {
     console.log(err.response.status);
+    throw err.response.data;
   }
 };
 export const addMusic = async (music) => {
@@ -57,7 +59,7 @@ export const addMusic = async (music) => {
     return res.data;
   } catch (err) {
     console.log(err.response.data);
-    return err.response.data;
+    throw err.response.data;
   }
 };
 
@@ -78,6 +80,6 @@ export const updateMusic = async (music, id) => {
     return res.data;
   } catch (err) {
     // console.log(err.response.data);
-    return err.response.data;
+    throw err.response.data;
   }
 };

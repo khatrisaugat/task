@@ -16,8 +16,8 @@ export const loginUser = async (user) => {
     }
     return res.data;
   } catch (err) {
-    console.log(err.response.data);
-    return err.response.data;
+    console.log("auth", err.response.data);
+    throw err.response.data;
   }
 };
 
@@ -37,6 +37,6 @@ export const registerUser = async (user) => {
     return res.data;
   } catch (err) {
     console.log(err.response.data);
-    return err.response.data;
+    throw err.response.data;
   }
 };
